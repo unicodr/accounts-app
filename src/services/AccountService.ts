@@ -1,68 +1,65 @@
-import { Account } from "../models/account";
+import { Account } from '../models/account';
+import * as admin from 'firebase-admin';
 
 export default class AccountService {
 
-    private accounts: Account[];
+    private db: admin.database.Database;
 
     constructor() {
-        // Array of accounts for test data
-        if (process.env.NODE_ENV == 'test') {
-            this.accounts = [
-                new Account("id1", "julia@gmail.com"),
-                new Account("id2", "jonas@gmail.com"),
-                new Account("id3", "amanda@gmail.com"),
-                new Account("id4", "karl@gmail.com")
-            ];
-        } else {
-        this.accounts = null;
-        }
+        this.db = admin.database();
+        admin.database.enableLogging(true);
     }
 
-    getAll(): Account[] {
-        return this.accounts;
+    getAll(): Promise<Account[]> {
+        let accounts = new Array<Account>();
+        return this.db.ref('/')
+            .once('value')
+            .then(snapshot => {
+                snapshot.forEach(child => {
+                    accounts.push(new Account(child.val().id, child.val().email));
+                });
+                return accounts;
+            })
+            .catch(error => {
+                return null;
+            });
     }
 
-    get(id: string): Account | null {
-        return this.getAccount(id);
+    get(id: string): Promise<Account> {
+        return this.db.ref(`/${id}`)
+            .once('value')
+            .then(snapshot => {
+                return new Account(snapshot.val().id, snapshot.val().email);
+            })
+            .catch(error => {
+                return null;
+            });
     }
 
-
-    create(account: Account): Account | null {
-        if (this.getAccount(account.id) !== null) {
-            return null;
-        }
-        this.accounts.push(account);
-        return account;
+    create(account: Account): Promise<void> {
+        let accountsRef = this.db.ref().child('/');
+        return accountsRef.child(account.id)
+            .set(account)
+            .catch(error => {
+                throw error;
+            });;
     }
 
-    update(account: Account): Account | null {
-        let accountToUpdate = this.getAccount(account.id);
-        if (accountToUpdate === null) {
-            return null;
-        } else {
-            let index = this.accounts.indexOf(accountToUpdate);
-            this.accounts[index] = account;
-        }
-        return account;
+    update(account: Account): Promise<void> {
+        console.log(`Will update: /${account.id}`);
+        let accountsRef = this.db.ref().child('/');
+        return accountsRef.child(account.id)
+            .set(account)
+            .catch(error => {
+                throw error;
+            });;
     }
 
-    delete(id: string): Account | null {
-        let accountToDelete = this.getAccount(id);
-        if (accountToDelete === null) {
-            return null;
-        } else {
-            let index = this.accounts.indexOf(accountToDelete);
-            return this.accounts.splice(index, 1)[0];
-            
-        }
-    }
-
-    private getAccount(id: string): Account | null {
-        for (let account of this.accounts) {
-            if (account.id === id) {
-                return account;
-            }
-        }
-        return null;
+    delete(id: string): Promise<void> {
+        return this.db.ref(`/${id}`)
+            .remove()
+            .catch(error => {
+                throw error;
+            });
     }
 }

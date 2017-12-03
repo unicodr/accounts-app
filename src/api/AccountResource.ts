@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { Account } from "../models/account";
-import AccountService from "../services/AccountService";
+import { Account } from '../models/account';
+import AccountService from '../services/AccountService';
 
 export class AccountResource {
   router: Router;
@@ -20,69 +20,65 @@ export class AccountResource {
    * GET all accounts.
    */
   getAll(req: Request, res: Response) {
-    let accountService = new AccountService();
-    let accounts = accountService.getAll();
-    if (accounts == null) {
-      res.sendStatus(400);
-    } else {
-      res.json(accounts);
-    }
+    let accountService: AccountService = new AccountService();
+    let accounts: Account[];
+    accountService.getAll()
+      .then(accounts => {
+        if (accounts === null) {
+          res.sendStatus(400);
+        } else {
+          res.json(accounts);
+        }
+      });
   }
 
   /**
    * GET an account by id.
    */
   getAccount(req: Request, res: Response) {
-    let idParam = req.params.accountId;
-    let accountService = new AccountService();
-    let account = accountService.get(idParam);
-    if (account == null) {
-      res.sendStatus(400);
-    } else {
-      res.json(account);
-    }
+    let idParam: string = req.params.accountId;
+    let accountService: AccountService = new AccountService();
+    accountService.get(idParam)
+      .then((account) => {
+        if (account === null) {
+          res.sendStatus(400);
+        } else {
+          res.json(account);
+        }
+      });
   }
 
   /**
   * POST an account.
   */
   addAccount(req: Request, res: Response) {
-    let accountToAdd = req.body;
-    let accountService = new AccountService();
-    let account = accountService.create(accountToAdd);
-    if (account == null) {
-      res.sendStatus(400);
-    } else {
-      res.json(account);
-    }
+    let accountToAdd: Account = req.body;
+    let accountService: AccountService = new AccountService();
+    accountService.create(accountToAdd)
+      .then(() => res.sendStatus(200));
   }
 
   /**
    * PUT an account.
    */
   updateAccount(req: Request, res: Response) {
-    let accountToUpdate = req.body;
-    let accountService = new AccountService();
-    let account = accountService.update(accountToUpdate);
-    if (account == null) {
-      res.sendStatus(400);
-    } else {
-      res.json(account);
-    }
+    let accountToUpdate: Account = req.body;
+    let accountService: AccountService = new AccountService();
+    accountService.update(accountToUpdate)
+      .then(() => res.sendStatus(200));
   }
 
   /**
    * DELETE an account.
    */
   deleteAccount(req: Request, res: Response) {
-    let id_param = req.params.accountId;
-    let accountService = new AccountService();
-    let account = accountService.delete(id_param);
-    if (account == null) {
-      res.sendStatus(400);
-    } else {
-      res.json(account);
-    }
+    let id_param: string = req.params.accountId;
+    let accountService: AccountService = new AccountService();
+    accountService.delete(id_param)
+      .then(() => res.sendStatus(200))
+      .catch(error => {
+        res.sendStatus(400);
+      });
   }
 }
 
