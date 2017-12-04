@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { Account } from '../models/account';
 import AccountService from '../services/AccountService';
+import { v4 as uuid } from 'uuid';
 
 export class AccountResource {
   router: Router;
@@ -52,7 +53,8 @@ export class AccountResource {
   * POST an account.
   */
   addAccount(req: Request, res: Response) {
-    let accountToAdd: Account = req.body;
+    let email = req.body.email;
+    let accountToAdd = new Account(uuid(), email);
     let accountService: AccountService = new AccountService();
     accountService.create(accountToAdd)
       .then(() => res.sendStatus(200));
@@ -82,5 +84,4 @@ export class AccountResource {
   }
 }
 
-const accountResource = new AccountResource();
-export default accountResource.router;
+export default new AccountResource().router;

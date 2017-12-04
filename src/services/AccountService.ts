@@ -46,7 +46,6 @@ export default class AccountService {
     }
 
     update(account: Account): Promise<void> {
-        console.log(`Will update: /${account.id}`);
         let accountsRef = this.db.ref().child('/');
         return accountsRef.child(account.id)
             .set(account)

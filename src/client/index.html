@@ -1,0 +1,19 @@
+<html>
+
+<body>
+    <h1>Accounts</h1>
+    <form action="javascript:void(0);" method="POST" onsubmit="createAccount()">
+        <input type="text" id="newAccount" placeholder="Email for new account">
+        <input type="submit" value="Create">
+    </form>
+    <table>
+        <thead>
+            <th>Id</th>
+            <th>Email</th>
+        </thead>
+        <tbody id="accounts"></tbody>
+    </table>
+    <script src="bundle.js"></script>
+</body>
+
+</html>
