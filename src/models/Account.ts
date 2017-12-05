@@ -1,4 +1,4 @@
-class Account {
+export default class Account {
     id: string;
     email: string;
     
@@ -7,5 +7,3 @@ class Account {
         this.email = email;
     }
 }
-
-export { Account };
