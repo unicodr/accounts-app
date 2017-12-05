@@ -21,7 +21,8 @@ export default class AccountService {
                 return accounts;
             })
             .catch(error => {
-                return null;
+                console.log(`Something went wrong: ${error}`);
+                throw error;
             });
     }
 
@@ -30,6 +31,7 @@ export default class AccountService {
         return accountsRef.child(account.id)
             .set(account)
             .catch(error => {
+                console.log(`Something went wrong: ${error}`);
                 throw error;
             });;
     }
@@ -39,6 +41,7 @@ export default class AccountService {
         return accountsRef.child(account.id)
             .set(account)
             .catch(error => {
+                console.log(`Something went wrong: ${error}`);
                 throw error;
             });;
     }
@@ -47,6 +50,7 @@ export default class AccountService {
         return this.db.ref(`/${id}`)
             .remove()
             .catch(error => {
+                console.log(`Something went wrong: ${error}`);
                 throw error;
             });
     }

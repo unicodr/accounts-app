@@ -23,8 +23,8 @@ export class AccountResource {
     let accounts: Account[];
     accountService.getAll()
       .then(accounts => {
-        if (accounts === null) {
-          res.sendStatus(400);
+        if (accounts === undefined || accounts.length < 1) {
+          res.sendStatus(404);
         } else {
           res.json(accounts);
         }
