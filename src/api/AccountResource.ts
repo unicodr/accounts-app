@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { Account } from '../models/account';
 import AccountService from '../services/AccountService';
 import { v4 as uuid } from 'uuid';
+var Account = require("../models/Account");
 
 export class AccountResource {
   router: Router;

@@ -1,5 +1,5 @@
-import { Account } from '../models/account';
 import * as admin from 'firebase-admin';
+var Account = require("../models/Account");
 
 export default class AccountService {
 
