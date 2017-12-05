@@ -25,17 +25,6 @@ export default class AccountService {
             });
     }
 
-    get(id: string): Promise<Account> {
-        return this.db.ref(`/${id}`)
-            .once('value')
-            .then(snapshot => {
-                return new Account(snapshot.val().id, snapshot.val().email);
-            })
-            .catch(error => {
-                return null;
-            });
-    }
-
     create(account: Account): Promise<void> {
         let accountsRef = this.db.ref().child('/');
         return accountsRef.child(account.id)

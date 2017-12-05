@@ -10,11 +10,9 @@ export class AccountResource {
   constructor() {
     this.router = Router();
     this.router.get('/', this.getAll);
-    this.router.get('/:accountId', this.getAccount);
     this.router.post('/', this.addAccount);
     this.router.put('/', this.updateAccount);
     this.router.delete('/:accountId', this.deleteAccount);
-
   }
 
   /**
@@ -29,22 +27,6 @@ export class AccountResource {
           res.sendStatus(400);
         } else {
           res.json(accounts);
-        }
-      });
-  }
-
-  /**
-   * GET an account by id.
-   */
-  getAccount(req: Request, res: Response) {
-    let idParam: string = req.params.accountId;
-    let accountService: AccountService = new AccountService();
-    accountService.get(idParam)
-      .then((account) => {
-        if (account === null) {
-          res.sendStatus(400);
-        } else {
-          res.json(account);
         }
       });
   }
