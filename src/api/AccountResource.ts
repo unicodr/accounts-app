@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import AccountService from '../services/AccountService';
 import { v4 as uuid } from 'uuid';
 import Account from '../models/Account';
+import * as validator from '../validation/AccountValidation';
 
 export class AccountResource {
   router: Router;
@@ -10,8 +11,8 @@ export class AccountResource {
   constructor() {
     this.router = Router();
     this.router.get('/', this.getAll);
-    this.router.post('/', this.addAccount);
-    this.router.put('/', this.updateAccount);
+    this.router.post('/', validator.validateSchema(), this.addAccount);
+    this.router.put('/', validator.validateSchema(), this.updateAccount);
     this.router.delete('/:accountId', this.deleteAccount);
   }
 
@@ -28,6 +29,8 @@ export class AccountResource {
         } else {
           res.json(accounts);
         }
+      }).catch(error => {
+        res.status(500).send({ error: error.toString() });
       });
   }
 
@@ -35,11 +38,15 @@ export class AccountResource {
   * POST an account.
   */
   addAccount(req: Request, res: Response) {
-    let email = req.body.email;
-    let accountToAdd = new Account(uuid(), email);
+    let email: string = req.body.email;
+    let accountToAdd: Account = new Account(uuid(), email);
     let accountService: AccountService = new AccountService();
-    accountService.create(accountToAdd)
-      .then(() => res.sendStatus(200));
+    return accountService.create(accountToAdd)
+      .then(() =>
+        res.sendStatus(200))
+      .catch(error => {
+        res.status(500).send({ error: error.toString() });
+      });
   }
 
   /**
@@ -49,7 +56,10 @@ export class AccountResource {
     let accountToUpdate: Account = req.body;
     let accountService: AccountService = new AccountService();
     accountService.update(accountToUpdate)
-      .then(() => res.sendStatus(200));
+      .then(() => res.sendStatus(200))
+      .catch(error => {
+        res.status(500).send({ error: error.toString() });
+      });
   }
 
   /**
@@ -59,9 +69,10 @@ export class AccountResource {
     let id_param: string = req.params.accountId;
     let accountService: AccountService = new AccountService();
     accountService.delete(id_param)
-      .then(() => res.sendStatus(200))
+      .then(() =>
+        res.sendStatus(200))
       .catch(error => {
-        res.sendStatus(400);
+        res.status(500).send({ error: error.toString() });
       });
   }
 }

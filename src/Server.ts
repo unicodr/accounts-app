@@ -18,7 +18,7 @@ class Server {
     this.db();
   }
 
-  private middleware(compiler): void {
+  private middleware(compiler: webpack.Compiler): void {
     this.express.use(require('webpack-dev-middleware')(compiler, {
       noInfo: true,
       publicPath: config.output.publicPath
@@ -33,13 +33,15 @@ class Server {
   }
 
   private db(): void {
+    let privateKey: string = process.env.FIREBASE_PRIVATE_KEY!;
     admin.initializeApp({
       credential: admin.credential.cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
+        privateKey: JSON.parse(privateKey)
       }),
-      databaseURL: 'https://accounts-app-a61e1.firebaseio.com'
+      databaseURL: process.env.DATABASE_URL
+      databaseURL: process.env.FIREBASE_DATABASE_URL
     });
   }
 }

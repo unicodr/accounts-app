@@ -1,14 +1,41 @@
 import { getAccounts, deleteAccount, updateAccount, addAccount } from './accountApi';
+import Account from '../models/Account';
 
-getAccounts().then(result => {
-   fetchAll();
+getAccounts().then(() => {
+    fetchAll();
 });
 
-function fetchAll () {
-    getAccounts().then(result => {
-        let accountsBody = "";
+(<any>window).createAccount = function () {
+    let email = (<HTMLInputElement>document.getElementById('newAccount')).value;
+    addAccount(email).then(result => {
+        fetchAll();
+    }).catch(error => {
+        alert("Error caught: " + error);
+    });
+};
 
-        result.forEach(account => {
+(<any>window).deleteAccount = function (id: string) {
+    deleteAccount(id).then(result => {
+        fetchAll();
+    }).catch(error => {
+        alert("Error caught: " + error);
+    });
+};
+
+(<any>window).updateAccount = function (id: string) {
+    let email = (<HTMLInputElement>document.getElementById("email-" + id)).value;
+    updateAccount(id, email).then(result => {
+        fetchAll();
+    }).catch(error => {
+        alert("Error caught: " + error);
+    });
+};
+
+function fetchAll() {
+    getAccounts().then(result => {
+        let accountsBody: string = "";
+
+        result.forEach((account: Account) => {
             accountsBody += `<tr id="${account.id}">
                 <td><input id="id-${account.id}" type="text" value=${account.id} disabled></td>
                 <td><input id="email-${account.id}" type="text" value=${account.email}></td>
@@ -16,26 +43,9 @@ function fetchAll () {
                 <td><button id="${account.id}" onClick="deleteAccount(this.id)">Delete</button></td>
                 </tr>`
         });
-        document.getElementById('accounts').innerHTML = accountsBody;
+        const accountsElement: HTMLElement = document.getElementById('accounts')!;
+        accountsElement.innerHTML = accountsBody;
+    }).catch(error => {
+        alert("Error caught: " + error);
     });
-};
-
-(<any>window).createAccount = function () {
-    let email = (<HTMLInputElement>document.getElementById('newAccount')).value;
-    addAccount(email).then(result => {
-        fetchAll();
-    });
-};
-
-(<any>window).deleteAccount = function (id) {
-    deleteAccount(id).then(result => {
-        fetchAll();
-    });
-};
-
-(<any>window).updateAccount = function (id) {
-    let email = (<HTMLInputElement>document.getElementById("email-" + id)).value;
-    updateAccount(id, email).then(result => {
-        fetchAll();
-    });
-};
+}
