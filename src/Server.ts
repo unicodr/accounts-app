@@ -40,7 +40,6 @@ class Server {
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
         privateKey: JSON.parse(privateKey)
       }),
-      databaseURL: process.env.DATABASE_URL
       databaseURL: process.env.FIREBASE_DATABASE_URL
     });
   }
