@@ -1,15 +1,50 @@
+<!doctype html>
 <html>
 
+<head>
+    <style>
+        .createbutton {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            opacity: 0.8;
+        }
+
+        .editbutton {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            opacity: 0.8;
+        }
+
+        .deletebutton {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            opacity: 0.8;
+        }
+
+        body {
+            font-family: Helvetica, Sans-Serif;
+            color: #444444;
+            font-size: 12pt;
+            background-color: #FAFAFA;
+        }
+    </style>
+</head>
+
 <body>
-    <h1>Accounts</h1>
+    <h1>Manage your accounts</h1>
+    <br>
     <form action="javascript:void(0);" method="POST" onsubmit="createAccount()">
-        <input type="text" id="newAccount" placeholder="Email for new account">
-        <input type="submit" value="Create">
+        <input type="text" size="45" id="newAccount" placeholder="Type email address for adding a new account">
+        <input type="submit" class="createbutton" value="Create">
     </form>
+    <br>
     <table>
         <thead>
-            <th>Id</th>
-            <th>Email</th>
+            <th align="left">Id</th>
+            <th align="left">Email</th>
         </thead>
         <tbody id="accounts"></tbody>
     </table>

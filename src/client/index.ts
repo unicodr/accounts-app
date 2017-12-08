@@ -37,10 +37,10 @@ function fetchAll() {
 
         result.forEach((account: Account) => {
             accountsBody += `<tr id="${account.id}">
-                <td><input id="id-${account.id}" type="text" value=${account.id} disabled></td>
-                <td><input id="email-${account.id}" type="text" value=${account.email}></td>
-                <td><button id="${account.id}" onClick="updateAccount(this.id)">Edit</button></td>
-                <td><button id="${account.id}" onClick="deleteAccount(this.id)">Delete</button></td>
+                <td><input id="id-${account.id}" type="text" size="45" value=${account.id} disabled></td>
+                <td><input id="email-${account.id}" type="text" size="45" value=${account.email}></td>
+                <td><button id="${account.id}" onClick="updateAccount(this.id)" class="editbutton">Edit</button></td>
+                <td><button id="${account.id}" onClick="deleteAccount(this.id)" class="deletebutton">Delete</button></td>
                 </tr>`
         });
         const accountsElement: HTMLElement = document.getElementById('accounts')!;
